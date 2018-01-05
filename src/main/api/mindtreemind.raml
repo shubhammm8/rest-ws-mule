@@ -1,0 +1,58 @@
+#%RAML 1.0
+baseUri: https://mocksvc.mulesoft.com/mocks/e2c1ca37-7f63-41e9-ba36-dcd5cede57a0 # 
+title: Mindtreemind
+
+/people:
+  /minds:
+    get:
+      responses:
+        200:
+          body:
+            application/json: 
+              example: |
+                {
+                  "m_id":10,
+                  "m_name":"Messi",
+                  "l_id":100,
+                  "l_name":"Barcelona",
+                  "t_id":100,
+                  "t_name":"LaLiga"
+                 } 
+    post:
+      body:
+        application/json:
+          example: |
+            {       
+                  "m_id": 10,
+                  "m_name": "Messi",
+                  "l_id": 100,
+                  "l_name": "Barcelona",
+                  "t_id": 100,
+                  "t_name": "LaLiga"
+
+            
+            }
+      responses: 
+        200:
+          body:
+            application/json:
+              example: |
+                { "Message":"Successfully done"
+                  }
+    /{ID}:
+      get:
+        responses:
+          200:
+            body:
+              application/json:
+                example: |
+                 {
+                  "m_id":10,
+                  "m_name":"Messi",
+                  "l_id":100,
+                  "l_name":"Barcelona",
+                  "t_id":100,
+                  "t_name":"LaLiga"
+                 } 
+              
+       

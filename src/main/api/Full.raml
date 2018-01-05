@@ -1,0 +1,233 @@
+#%RAML 1.0
+baseUri: https://mocksvc.mulesoft.com/mocks/fac71344-7c49-44ee-a2d1-922329c60837 # 
+title: Full
+/OrchardProgram:
+  /track:
+    get:
+      responses: 
+        200:
+          body: 
+            application/json:
+              example: |
+               {
+                "t_id":1,
+                "t_name":"track name"
+               }
+    post:
+      queryParameters:  
+        application/json:
+          example: |
+            {
+               "t_id":1,
+                "t_name":"track name"
+            }
+      responses: 
+        201:
+          body: 
+            application/json:
+              example: |
+               {
+                "Responses":"done posting"
+               }
+    /{ID}:
+      get:
+        responses:
+          200:
+            body:
+              application/json:
+                example: |
+                 {
+                    "t_id":1,
+                    "t_name":"track name"
+                 }
+      delete:
+        responses: 
+          202:
+            body: 
+              application/json:
+                example: | 
+                  {
+                    "Responses":"Deleted resource"
+                  }
+      put:
+        queryParameters: 
+          application/json:
+            example: |
+             {
+                "t_name":"somethng"
+             }
+        responses: 
+          200:
+            body:
+              application/json:
+                example: |
+                 {
+                  "t_id":"ID",
+                  "t_name":"something"
+                 }
+  /lead:
+    get:
+      responses: 
+        200:
+          body: 
+            application/json:
+              example: |
+                {
+                   "l_id":1,
+                   "l_name":"Lead name"
+                }
+    post:
+      queryParameters: 
+        application/json:
+          example: |
+            { 
+              "t_id":1,
+              "t_name":"track name",
+              "l_id":1,
+              "l_name":"Lead name"
+            }
+      responses: 
+        201:
+          body: 
+            application/json:
+              example: |
+               {
+                  "t_id":1,
+                  "t_name":"track name",
+                  "l_id":"XXX",
+                  "l_name":"XXXX XXXX"
+
+               }
+    /{LID}:
+      get:
+        responses: 
+          200:
+            body: 
+              application/json:
+                example: | 
+                  {
+                     "t_id":"LID",
+                      "t_name":"track name"
+                  }
+      delete:
+        responses: 
+          202:
+            body: 
+              application/json:
+                example: |
+                  {
+                    "Response":"Deleted Resource"
+                  }
+      put:
+        queryParameters: 
+          application/json:
+            example: |
+              {
+                "t_id":1,
+                "t_name":"XXX name",
+                "l_name":"XXX name",
+               
+              } 
+        responses: 
+          200:
+            body: 
+              application/json:
+                example: |
+                  {
+                    "t_id":1,
+                    "t_name":"XXX name",
+                    "l_id":"LID",
+                    "l_name":"XXX name"
+               
+                  }  
+  /minds:
+    get:
+      responses: 
+        200:
+          body: 
+            application/json:
+              example: |
+               {
+                "t_id":1,
+                "t_name":"track name",
+                "l_id":1,
+                "l_name":"Lead name",
+                "M_id":1,
+                "M_name":"Mind name"
+                }
+    post:
+      queryParameters: 
+        application/json:
+          example: |
+            {
+                "t_id":1,
+                "t_name":"track name",
+                "l_id":1,
+                "l_name":"Lead name",
+                "M_id":1,
+                "M_name":"Mind name"
+            }
+      responses: 
+        201:
+          body: 
+            application/json:
+              example: |
+               {
+                "t_id":1,
+                "t_name":"track name",
+                "l_id":1,
+                "l_name":"Lead name",
+                "M_id":1,
+                "M_name":"Mind name"
+               }      
+    /{MID}:
+      get:
+        responses:
+          200:
+            body: 
+              application/json:
+                example:
+                  {
+                      "t_id":1,
+                      "t_name":"track name",
+                      "l_id":1,
+                      "l_name":"Lead name",
+                      "M_id":"MID",
+                      "M_name":"Mind name"
+
+                  }
+      delete:
+        responses: 
+            202:
+              body: 
+                application/json:
+                  example: |
+                    {
+                      "Response":"Deleted Resource"
+                    }
+      put:
+        queryParameters: 
+          application/json:
+            example: |
+              {
+               
+                "t_name":"XXX XXX",
+                "l_id":1,
+                "l_name":"XXX XXX",
+                "M_id":1,
+                "M_name":"XXX XXX"
+
+              }
+        responses: 
+          200:
+            body:
+              application/json:
+                example: |
+                  {
+                      "t_id":"MID",
+                      "t_name":"XXX XXX",
+                      "l_id":1,
+                      "l_name":"XXX XXX",
+                      "M_id":1,
+                      "M_name":"XXX XXX"
+                  }

@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:metadata="http://www.mulesoft.org/schema/mule/metadata" xmlns:dw="http://www.mulesoft.org/schema/mule/ee/dw" xmlns:db="http://www.mulesoft.org/schema/mule/db" xmlns:json="http://www.mulesoft.org/schema/mule/json" xmlns:tracking="http://www.mulesoft.org/schema/mule/ee/tracking" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:spring="http://www.springframework.org/schema/beans" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
+http://www.mulesoft.org/schema/mule/ee/dw http://www.mulesoft.org/schema/mule/ee/dw/current/dw.xsd
+http://www.mulesoft.org/schema/mule/ee/tracking http://www.mulesoft.org/schema/mule/ee/tracking/current/mule-tracking-ee.xsd
+http://www.mulesoft.org/schema/mule/json http://www.mulesoft.org/schema/mule/json/current/mule-json.xsd">
+    <db:mysql-config name="MySQL_Configuration" host="localhost" port="3306" user="root" password="Welcome123" database="hibernate15" doc:name="MySQL Configuration"/>
+    <flow name="select-minds">
+        <db:select config-ref="MySQL_Configuration" doc:name="Database">
+            <db:parameterized-query><![CDATA[Select * from minds;]]></db:parameterized-query>
+        </db:select>
+        <json:object-to-json-transformer doc:name="Object to JSON"/>
+    </flow>
+    <flow name="select-lead">
+        <db:select config-ref="MySQL_Configuration" doc:name="Database">
+            <db:parameterized-query><![CDATA[select * from lead;]]></db:parameterized-query>
+        </db:select>
+        <json:object-to-json-transformer doc:name="Object to JSON"/>
+    </flow>
+    <flow name="select-track">
+        <db:select config-ref="MySQL_Configuration" doc:name="Database">
+            <db:parameterized-query><![CDATA[select * from track;]]></db:parameterized-query>
+        </db:select>
+        <json:object-to-json-transformer doc:name="Object to JSON"/>
+    </flow>
+    <flow name="select-track-id">
+        <db:select config-ref="MySQL_Configuration" doc:name="Database">
+            <db:parameterized-query><![CDATA[select * from track where t_id=#[sessionVars.TID];]]></db:parameterized-query>
+        </db:select>
+        <json:object-to-json-transformer doc:name="Object to JSON"/>
+    </flow>
+    <flow name="select-lead-id">
+        <db:select config-ref="MySQL_Configuration" doc:name="Database">
+            <db:parameterized-query><![CDATA[select * from lead where l_id=#[sessionVars.lid];]]></db:parameterized-query>
+        </db:select>
+        <json:object-to-json-transformer doc:name="Object to JSON"/>
+    </flow>
+    <flow name="select-mind-id">
+        <db:select config-ref="MySQL_Configuration" doc:name="Database">
+            <db:parameterized-query><![CDATA[select * from minds where m_id=#[sessionVars.mid];]]></db:parameterized-query>
+        </db:select>
+        <json:object-to-json-transformer doc:name="Object to JSON"/>
+    </flow>
+    <flow name="insert-mind">
+        <logger message="#[sessionVars.tid]" level="INFO" doc:name="Logger"/>
+        <db:insert config-ref="MySQL_Configuration" doc:name="Database">
+            <db:parameterized-query><![CDATA[Insert into track(t_id,t_name)values(#[sessionVars.tid],#[sessionVars.tname]);]]></db:parameterized-query>
+        </db:insert>
+        <db:insert config-ref="MySQL_Configuration" doc:name="Database">
+            <db:parameterized-query><![CDATA[Insert into lead(l_id,l_name,t_id)values(#[sessionVars.lid],#[sessionVars.lname],#[sessionVars.tid]);]]></db:parameterized-query>
+        </db:insert>
+        <db:insert config-ref="MySQL_Configuration" doc:name="Database">
+            <db:parameterized-query><![CDATA[Insert into minds(m_id,m_name,l_id)values(#[sessionVars.mid],#[sessionVars.mname],#[sessionVars.lid]);]]></db:parameterized-query>
+        </db:insert>
+        <db:select config-ref="MySQL_Configuration" doc:name="Database">
+            <db:parameterized-query><![CDATA[select * from minds where m_id=#[sessionVars.mid];]]></db:parameterized-query>
+        </db:select>
+        <json:object-to-json-transformer doc:name="Object to JSON"/>
+    </flow>
+    <flow name="insert-lead">
+        <db:insert config-ref="MySQL_Configuration" doc:name="Database">
+            <db:parameterized-query><![CDATA[Insert Into lead(l_id,l_name,t_id) values(#[sessionVars.lid],#[sessionVars.lname],#[sessionVars.tid]);]]></db:parameterized-query>
+        </db:insert>
+        <db:select config-ref="MySQL_Configuration" doc:name="Database">
+            <db:parameterized-query><![CDATA[select * from lead where l_id=#[sessionVars.lid];]]></db:parameterized-query>
+        </db:select>
+        <json:object-to-json-transformer doc:name="Object to JSON"/>
+    </flow>
+    <flow name="insert-track">
+        <db:insert config-ref="MySQL_Configuration" doc:name="Database">
+            <db:parameterized-query><![CDATA[insert into track(t_id,t_name)values(#[sessionVars.tid],#[sessionVars.tname]);]]></db:parameterized-query>
+        </db:insert>
+        <db:select config-ref="MySQL_Configuration" doc:name="Database">
+            <db:parameterized-query><![CDATA[select * from track where t_id=#[sessionVars.tid];]]></db:parameterized-query>
+        </db:select>
+        <json:object-to-json-transformer doc:name="Object to JSON"/>
+    </flow>
+    <flow name="update-track">
+        <db:update config-ref="MySQL_Configuration" doc:name="Database">
+            <db:parameterized-query><![CDATA[update track set t_name=#[sessionVars.tname] where t_id=#[sessionVars.tid];]]></db:parameterized-query>
+        </db:update>
+        <db:select config-ref="MySQL_Configuration" doc:name="Database">
+            <db:parameterized-query><![CDATA[select * from track where t_id=#[sessionVars.tid];]]></db:parameterized-query>
+        </db:select>
+        <json:object-to-json-transformer doc:name="Object to JSON"/>
+    </flow>
+    <flow name="update-lead">
+        <db:update config-ref="MySQL_Configuration" doc:name="Database">
+            <db:parameterized-query><![CDATA[update lead set l_name=#[sessionVars.lname] where l_id=#[sessionVars.lid];]]></db:parameterized-query>
+        </db:update>
+        <db:select config-ref="MySQL_Configuration" doc:name="Database">
+            <db:parameterized-query><![CDATA[select * from lead where l_id=#[sessionVars.lid];]]></db:parameterized-query>
+        </db:select>
+        <json:object-to-json-transformer doc:name="Object to JSON"/>
+    </flow>
+    <flow name="update-minds">
+        <db:update config-ref="MySQL_Configuration" doc:name="Database">
+            <db:parameterized-query><![CDATA[update minds set m_name=#[sessionVars.mname]where m_id=#[sessionVars.mid];]]></db:parameterized-query>
+        </db:update>
+        <db:select config-ref="MySQL_Configuration" doc:name="Database">
+            <db:parameterized-query><![CDATA[select * from minds where m_id =#[sessionVars.mid];]]></db:parameterized-query>
+        </db:select>
+        <json:object-to-json-transformer doc:name="Object to JSON"/>
+    </flow>
+    <flow name="delete-track">
+        <db:delete config-ref="MySQL_Configuration" doc:name="Database">
+            <db:parameterized-query><![CDATA[delete from track where t_id=#[sessionVars.tid];]]></db:parameterized-query>
+        </db:delete>
+        <set-payload value="successfully deleted  track with tid : #[sessionVars.tid]" doc:name="Set Payload"/>
+        <json:object-to-json-transformer doc:name="Object to JSON"/>
+    </flow>
+    <flow name="delete-lead">
+        <db:delete config-ref="MySQL_Configuration" doc:name="Database">
+            <db:parameterized-query><![CDATA[delete from lead where l_id=#[sessionVars.lid];]]></db:parameterized-query>
+        </db:delete>
+        <set-payload value="succesfully deleted lead with lead id : #[sessionVars.lid];" doc:name="Set Payload"/>
+        <json:object-to-json-transformer doc:name="Object to JSON"/>
+    </flow>
+    <flow name="delete-mind">
+        <db:delete config-ref="MySQL_Configuration" doc:name="Database">
+            <db:parameterized-query><![CDATA[delete from minds where m_id=#[sessionVars.mid];]]></db:parameterized-query>
+        </db:delete>
+        <set-payload value="successfully deleted min with mind id : #[sessionVars.mid]" doc:name="Set Payload"/>
+        <json:object-to-json-transformer doc:name="Object to JSON"/>
+    </flow>
+    <flow name="check-Flow">
+        <logger message="#[sessionVars.fcheck]" level="INFO" doc:name="Logger"/>
+        <db:select config-ref="MySQL_Configuration" doc:name="insertingminds">
+            <db:parameterized-query><![CDATA[select * from track where t_id=#[sessionVars.tid];]]></db:parameterized-query>
+        </db:select>
+        <logger message="#[payload]" level="INFO" doc:name="Logger"/>
+        <choice doc:name="Choice">
+            <when expression="#[payload==empty]">
+                <flow-ref name="create-track" doc:name="create-track"/>
+            </when>
+            <when expression="#[payload!=empty]">
+                <flow-ref name="checkiing-lead-present" doc:name="checkiing-lead-present"/>
+            </when>
+        </choice>
+    </flow>
+    <flow name="checkiing-lead-present">
+        <db:select config-ref="MySQL_Configuration" doc:name="Database">
+            <db:parameterized-query><![CDATA[select * from lead where l_id=#[sessionVars.lid];]]></db:parameterized-query>
+        </db:select>
+        <choice doc:name="Choice">
+            <when expression="#[payload==empty]">
+                <flow-ref name="inseringleads" doc:name="inseringleads"/>
+            </when>
+            <when expression="#[payload!=empty]">
+                <flow-ref name="mindsinserting" doc:name="Flow Reference insert minds"/>
+            </when>
+        </choice>
+    </flow>
+    <flow name="inseringleads">
+        <db:insert config-ref="MySQL_Configuration" doc:name="Database">
+            <db:parameterized-query><![CDATA[insert into lead (l_id,l_name,t_id)values(#[sessionVars.lid],#[sessionVars.lname],#[sessionVars.tid]);]]></db:parameterized-query>
+        </db:insert>
+        <flow-ref name="mindsinserting" doc:name="mindsinserting"/>
+    </flow>
+    <flow name="create-track">
+        <db:insert config-ref="MySQL_Configuration" doc:name="Database">
+            <db:parameterized-query><![CDATA[Insert Into track (t_id,t_name) values(#[sessionVars.tid],#[sessionVars.tname]);]]></db:parameterized-query>
+        </db:insert>
+        <flow-ref name="checkiing-lead-present" doc:name="checkiing-lead-present"/>
+    </flow>
+    <flow name="mindsinserting">
+        <db:insert config-ref="MySQL_Configuration" doc:name="Database">
+            <db:parameterized-query><![CDATA[insert into minds (m_id,m_name,l_id) values(#[sessionVars.mid],#[sessionVars.mname],#[sessionVars.lid]);]]></db:parameterized-query>
+        </db:insert>
+        <db:select config-ref="MySQL_Configuration" doc:name="Database">
+            <db:parameterized-query><![CDATA[select 8 from minds where m_id=#[sessionVars.mid];]]></db:parameterized-query>
+        </db:select>
+        <json:object-to-json-transformer doc:name="Object to JSON"/>
+    </flow>
+    <flow name="insringleadwithtrack">
+        <db:select config-ref="MySQL_Configuration" doc:name="Database">
+            <db:parameterized-query><![CDATA[select * from track where t_id=#[sessionVars.tid];]]></db:parameterized-query>
+        </db:select>
+        <choice doc:name="Choice">
+            <when expression="#[payload==empty]">
+                <flow-ref name="creatingtrack-forlead" doc:name="creatingtrack-forlead"/>
+            </when>
+            <when expression="#[payload!=empty]">
+                <flow-ref name="insert-lead" doc:name="insert-lead"/>
+            </when>
+        </choice>
+    </flow>
+    <flow name="creatingtrack-forlead">
+        <db:insert config-ref="MySQL_Configuration" doc:name="Database">
+            <db:parameterized-query><![CDATA[insert into track(t_id,t_name) values(#[sessionVars.tid],#[sessionVars.tname]);]]></db:parameterized-query>
+        </db:insert>
+        <flow-ref name="insert-lead" doc:name="insert-lead"/>
+    </flow>
+</mule>

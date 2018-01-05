@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:apikit="http://www.mulesoft.org/schema/mule/apikit" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:spring="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/apikit http://www.mulesoft.org/schema/mule/apikit/current/mule-apikit.xsd
+http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd">
+    <http:listener-config name="Full-httpListenerConfig" host="0.0.0.0" port="8081" doc:name="HTTP Listener Configuration"/>
+    <apikit:config name="Full-config" raml="Full.raml" consoleEnabled="false" doc:name="Router"/>
+    <flow name="Full-main">
+        <http:listener config-ref="Full-httpListenerConfig" path="/api/*" doc:name="HTTP"/>
+        <apikit:router config-ref="Full-config" doc:name="APIkit Router"/>
+        <exception-strategy ref="Full-apiKitGlobalExceptionMapping" doc:name="Reference Exception Strategy"/>
+    </flow>
+    <flow name="Full-console">
+        <http:listener config-ref="Full-httpListenerConfig" path="/console/*" doc:name="HTTP"/>
+        <apikit:console config-ref="Full-config" doc:name="APIkit Console"/>
+    </flow>
+    <flow name="put:/OrchardProgram/track/{ID}:Full-config">
+        <set-session-variable variableName="tname" value="#[message.inboundProperties.'http.query.params'.tname]" doc:name="Session Variable"/>
+        <set-session-variable variableName="tid" value="#[message.inboundProperties.'http.uri.params'.ID]" doc:name="Session Variable"/>
+        <flow-ref name="update-track" doc:name="update-track"/>
+
+    </flow>
+    <flow name="put:/OrchardProgram/lead/{LID}:Full-config">
+        <set-session-variable variableName="lid" value="#[message.inboundProperties.'http.uri.params'.LID]" doc:name="Session Variable"/>
+        <set-session-variable variableName="lname" value="#[message.inboundProperties.'http.query.params'.lname]" doc:name="Session Variable"/>
+        <flow-ref name="update-lead" doc:name="update-lead"/>
+
+    </flow>
+    <flow name="put:/OrchardProgram/minds/{MID}:Full-config">
+        <set-session-variable variableName="mid" value="#[message.inboundProperties.'http.query.params'.mid]" doc:name="Session Variable"/>
+        <set-session-variable variableName="mname" value="#[message.inboundProperties.'http.query.params'.mname]" doc:name="Session Variable"/>
+        <flow-ref name="update-minds" doc:name="update-minds"/>
+
+    </flow>
+    <flow name="delete:/OrchardProgram/track/{ID}:Full-config">
+        <set-session-variable variableName="tid" value="#[message.inboundProperties.'http.uri.params'.ID]" doc:name="Session Variable"/>
+        <flow-ref name="delete-track" doc:name="delete-track"/>
+
+    </flow>
+    <flow name="delete:/OrchardProgram/lead/{LID}:Full-config">
+        <set-session-variable variableName="lid" value="#[message.inboundProperties.'http.uri.params'.LID]" doc:name="Session Variable"/>
+        <flow-ref name="delete-lead" doc:name="delete-lead"/>
+
+    </flow>
+    <flow name="delete:/OrchardProgram/minds/{MID}:Full-config">
+        <set-session-variable variableName="mid" value="#[message.inboundProperties.'http.uri.params'.MID]" doc:name="Session Variable"/>
+        <flow-ref name="delete-mind" doc:name="delete-mind"/>
+
+    </flow>
+    <flow name="get:/OrchardProgram/lead:Full-config">
+        <flow-ref name="select-lead" doc:name="select-lead"/>
+
+    </flow>
+    <flow name="get:/OrchardProgram/minds:Full-config">
+        <flow-ref name="select-minds" doc:name="select-minds"/>
+
+    </flow>
+    <flow name="get:/OrchardProgram/track:Full-config">
+        <flow-ref name="select-track" doc:name="select-track"/>
+
+    </flow>
+    <flow name="get:/OrchardProgram/track/{ID}:Full-config">
+        <set-session-variable variableName="TID" value="#[message.inboundProperties.'http.uri.params'.ID]" doc:name="Session Variable"/>
+        <flow-ref name="select-track-id" doc:name="select-track-id"/>
+
+    </flow>
+    <flow name="get:/OrchardProgram/lead/{LID}:Full-config">
+        <set-session-variable variableName="lid" value="#[message.inboundProperties.'http.uri.params'.LID]" doc:name="Session Variable"/>
+        <flow-ref name="select-lead-id" doc:name="select-lead-id"/>
+
+    </flow>
+    <flow name="get:/OrchardProgram/minds/{MID}:Full-config">
+        <set-session-variable variableName="mid" value="#[message.inboundProperties.'http.uri.params'.MID]" doc:name="Session Variable"/>
+        <flow-ref name="select-mind-id" doc:name="select-minds"/>
+
+    </flow>
+    <flow name="post:/OrchardProgram/lead:Full-config">
+        <set-session-variable variableName="lid" value="#[message.inboundProperties.'http.query.params'.lid]" doc:name="Session Variable"/>
+        <set-session-variable variableName="lname" value="#[message.inboundProperties.'http.query.params'.lname]" doc:name="Session Variable"/>
+        <set-session-variable variableName="tid" value="#[message.inboundProperties.'http.query.params'.tid]" doc:name="Session Variable"/>
+        <set-session-variable variableName="tname" value="#[message.inboundProperties.'http.query.params'.tname]" doc:name="Session Variable"/>
+        <flow-ref name="insringleadwithtrack" doc:name="insringleadwithtrack"/>
+
+    </flow>
+    <flow name="post:/OrchardProgram/minds:Full-config">
+        <set-session-variable variableName="mid" value="#[message.inboundProperties.'http.query.params'.mid]" doc:name="Session Variable-mid"/>
+        <set-session-variable variableName="lid" value="#[message.inboundProperties.'http.query.params'.lid]" doc:name="Session Variable-lid"/>
+        <set-session-variable variableName="tid" value="#[message.inboundProperties.'http.query.params'.tid]" doc:name="Session Variable-tid"/>
+        <set-session-variable variableName="mname" value="#[message.inboundProperties.'http.query.params'.mname]" doc:name="Session Variable-mname"/>
+        <set-session-variable variableName="lname" value="#[message.inboundProperties.'http.query.params'.lname]" doc:name="Session Variable-lname"/>
+        <set-session-variable variableName="tname" value="#[message.inboundProperties.'http.query.params'.tname]" doc:name="Session Variable-tname"/>
+        <flow-ref name="check-Flow" doc:name="check-Flow"/>
+
+    </flow>
+    <flow name="post:/OrchardProgram/track:Full-config">
+        <set-session-variable variableName="tid" value="#[message.inboundProperties.'http.query.params'.tid]" doc:name="Session Variable"/>
+        <set-session-variable variableName="tname" value="#[message.inboundProperties.'http.query.params'.tname]" doc:name="Session Variable"/>
+        <flow-ref name="insert-track" doc:name="insert-track"/>
+
+    </flow>
+    <apikit:mapping-exception-strategy name="Full-apiKitGlobalExceptionMapping">
+        <apikit:mapping statusCode="404">
+            <apikit:exception value="org.mule.module.apikit.exception.NotFoundException" />
+            <set-property propertyName="Content-Type" value="application/json" doc:name="Property"/>
+            <set-payload value="{ &quot;message&quot;: &quot;Resource not found&quot; }" doc:name="Set Payload"/>
+        </apikit:mapping>
+        <apikit:mapping statusCode="405">
+            <apikit:exception value="org.mule.module.apikit.exception.MethodNotAllowedException" />
+            <set-property propertyName="Content-Type" value="application/json" doc:name="Property"/>
+            <set-payload value="{ &quot;message&quot;: &quot;Method not allowed&quot; }" doc:name="Set Payload"/>
+        </apikit:mapping>
+        <apikit:mapping statusCode="415">
+            <apikit:exception value="org.mule.module.apikit.exception.UnsupportedMediaTypeException" />
+            <set-property propertyName="Content-Type" value="application/json" doc:name="Property"/>
+            <set-payload value="{ &quot;message&quot;: &quot;Unsupported media type&quot; }" doc:name="Set Payload"/>
+        </apikit:mapping>
+        <apikit:mapping statusCode="406">
+            <apikit:exception value="org.mule.module.apikit.exception.NotAcceptableException" />
+            <set-property propertyName="Content-Type" value="application/json" doc:name="Property"/>
+            <set-payload value="{ &quot;message&quot;: &quot;Not acceptable&quot; }" doc:name="Set Payload"/>
+        </apikit:mapping>
+        <apikit:mapping statusCode="400">
+            <apikit:exception value="org.mule.module.apikit.exception.BadRequestException" />
+            <set-property propertyName="Content-Type" value="application/json" doc:name="Property"/>
+            <set-payload value="{ &quot;message&quot;: &quot;Bad request&quot; }" doc:name="Set Payload"/>
+        </apikit:mapping>
+    </apikit:mapping-exception-strategy>
+</mule>
